@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\ActiveLog;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+/**
+ * Active Log
+ */
+class ActiveLogController extends Controller
+{
+    public function store(Request $request)
+    {
+        if(!ActiveLog::whereDate('created_at', Carbon::today())->where('user_id', Auth::user()->id)->exists()) {
+            ActiveLog::create([
+                'user_id' => Auth::user()->id
+            ]);
+        }
+        return response()->json([], 200);
+    }
+}
